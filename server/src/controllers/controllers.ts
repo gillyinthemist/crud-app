@@ -62,7 +62,7 @@ export async function deleteEmployee(req: Request, res: Response) {
   const { id } = req.params;
   const numId = parseInt(id);
   try {
-    const employee = await prisma.employee.delete({
+    await prisma.employee.delete({
       where: {
         id: numId,
       },
