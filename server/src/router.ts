@@ -1,8 +1,13 @@
 import express from 'express';
-import { createEmployee, getEmployees } from './controllers/controllers';
+import {
+  createEmployee,
+  deleteEmployee,
+  getEmployees,
+  updateEmployee,
+} from './controllers/controllers';
 export const router = express.Router();
 
 router.post('/employees', createEmployee);
 router.get('/employees', getEmployees);
-// router.put('/employees/:id', updateEmployee);
-// router.delete('/employees/:id', deleteEmployee);
+router.put('/employees/:id', updateEmployee);
+router.delete('/employees/:id', deleteEmployee);
