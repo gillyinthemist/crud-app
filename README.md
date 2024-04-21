@@ -46,3 +46,4 @@ Database:
 - Auth
 - Caching
 - Pagination (only get x amount of employees at a time)
+- Debouncing

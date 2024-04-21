@@ -9,3 +9,8 @@ export interface Employee {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
+
+export interface filterValue {
+  filter: string;
+  value: string;
+}

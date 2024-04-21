@@ -25,13 +25,58 @@ export async function createEmployee(req: Request, res: Response) {
   }
 }
 
+//Get employees, all if no queries, else search by query in url
 export async function getEmployees(req: Request, res: Response) {
-  try {
-    const employees = await prisma.employee.findMany();
-    res.send(employees);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('An error occurred while fetching employees');
+  const { search, dep, position } = req.query;
+  if (dep) {
+    try {
+      const employees = await prisma.employee.findMany({
+        where: {
+          department: decodeURI(dep as string),
+        },
+      });
+      res.send(employees);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while fetching employees');
+    }
+  } else if (position) {
+    try {
+      const employees = await prisma.employee.findMany({
+        where: {
+          position: decodeURI(position as string),
+        },
+      });
+      res.send(employees);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while fetching employees');
+    }
+  } else if (search) {
+    const str = (search as string).split(' ').join();
+    try {
+      const employees = await prisma.employee.findMany({
+        orderBy: {
+          _relevance: {
+            fields: ['firstName', 'lastName', 'department', 'position'],
+            search: str,
+            sort: 'desc',
+          },
+        },
+      });
+      res.send(employees);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while fetching employees');
+    }
+  } else {
+    try {
+      const employees = await prisma.employee.findMany();
+      res.send(employees);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while fetching employees');
+    }
   }
 }
 

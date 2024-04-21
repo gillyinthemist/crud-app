@@ -1,5 +1,12 @@
 import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   getKeyValue,
+  Input,
+  SortDescriptor,
   Spinner,
   Table,
   TableBody,
@@ -12,7 +19,13 @@ import {
 import { Employee } from '../utils/types';
 import { fetchEmployees } from '../services/api-service';
 import { useAsyncList } from '@react-stately/data';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import {
+  PencilIcon,
+  PlusCircleIcon,
+  PlusIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 
 const columns = [
   {
@@ -47,10 +60,12 @@ const columns = [
 
 export default function EmployeePage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedKeys, setSelectedKeys] = useState();
 
   const list = useAsyncList<Employee>({
-    async load() {
-      const res = await fetchEmployees();
+    async load({ filterText }) {
+      setIsLoading(true);
+      const res = await fetchEmployees(filterText);
       setIsLoading(false);
       return {
         items: res,
@@ -89,19 +104,59 @@ export default function EmployeePage() {
     },
   });
 
+  useEffect(() => {
+    list.reload();
+  }, [list.filterText]);
+
   return (
     <div className="flex flex-col p-10 gap-10">
       <div className="flex flex-row w-full justify-between">
         <h1>Employees</h1>
-        <p>Search</p>
+        {/* <Dropdown>
+          <DropdownTrigger>
+            <Button variant="bordered">Open Menu</Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Dynamic Actions" items={items}>
+            {(item) => (
+              <DropdownItem
+                key={item.key}
+                color={item.key === 'delete' ? 'danger' : 'default'}
+                className={item.key === 'delete' ? 'text-danger' : ''}
+              >
+                {item.label}
+              </DropdownItem>
+            )}
+          </DropdownMenu>
+        </Dropdown> */}
+        <div className="flex gap-3 items-center">
+          <Button>
+            New employee
+            <PlusIcon width={25} />
+          </Button>
+          <Button isDisabled={!selectedKeys ? true : false}>
+            Edit <PencilIcon width={20} />
+          </Button>
+          <Button isDisabled={!selectedKeys ? true : false}>
+            Delete <TrashIcon width={20} />
+          </Button>
+          <Input
+            className="w-96"
+            type="text"
+            label="Search"
+            value={list.filterText}
+            onValueChange={list.setFilterText}
+          />
+        </div>
       </div>
       <Table
         aria-label="Employee table"
         className="max-h-[85vh]"
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
-        isStriped
         isHeaderSticky
+        selectionMode="single"
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
       >
         <TableHeader columns={columns}>
           {(column) => (
