@@ -40,3 +40,8 @@ Database:
 ### Wireframing:
 
 [Figma](https://www.figma.com/file/9jeUvaeGUEwgH5fZy0Qq3V/SCSK-CRUD-Application?type=design&node-id=0%3A1&mode=design&t=1AFQrYLqTFpD19UP-1)
+
+## Improvements to be made
+
+- Caching
+- Pagination (only get x amount of employees at a time)
