@@ -9,16 +9,10 @@ import {
   TableRow,
 } from '@nextui-org/react';
 
-import { useEffect, useState } from 'react';
-import { useStore } from '../zustand/store';
 import { Employee } from '../utils/types';
 import { fetchEmployees } from '../services/api-service';
 import { useAsyncList } from '@react-stately/data';
-
-interface SortDescriptor {
-  column: keyof Employee;
-  direction: 'ascending' | 'descending';
-}
+import { useState } from 'react';
 
 const columns = [
   {
@@ -54,7 +48,7 @@ const columns = [
 export default function EmployeePage() {
   const [isLoading, setIsLoading] = useState(true);
 
-  const list = useAsyncList({
+  const list = useAsyncList<Employee>({
     async load() {
       const res = await fetchEmployees();
       setIsLoading(false);
@@ -106,6 +100,8 @@ export default function EmployeePage() {
         className="max-h-[85vh]"
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
+        isStriped
+        isHeaderSticky
       >
         <TableHeader columns={columns}>
           {(column) => (
