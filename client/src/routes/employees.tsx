@@ -1,5 +1,6 @@
 import {
   getKeyValue,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -8,10 +9,16 @@ import {
   TableRow,
 } from '@nextui-org/react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore } from '../zustand/store';
 import { Employee } from '../utils/types';
 import { fetchEmployees } from '../services/api-service';
+import { useAsyncList } from '@react-stately/data';
+
+interface SortDescriptor {
+  column: keyof Employee;
+  direction: 'ascending' | 'descending';
+}
 
 const columns = [
   {
@@ -45,18 +52,48 @@ const columns = [
 ];
 
 export default function EmployeePage() {
-  // ZUSTAND:
-  const { setAllEmployees } = useStore();
-  const allEmployees = useStore((state) => state.allEmployees);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // USE EFFECT:
-  useEffect(() => {
-    async function fetchAllEmployees() {
+  const list = useAsyncList({
+    async load() {
       const res = await fetchEmployees();
-      setAllEmployees(res as Employee[]);
-    }
-    fetchAllEmployees();
-  }, []);
+      setIsLoading(false);
+      return {
+        items: res,
+      };
+    },
+    async sort({ items, sortDescriptor }) {
+      return {
+        items: (items as Employee[]).sort((a, b) => {
+          const first = a[sortDescriptor.column as keyof Employee];
+          const second = b[sortDescriptor.column as keyof Employee];
+
+          // Convert both values to string or default to empty string if undefined
+          const firstValue = first !== undefined ? String(first) : '';
+          const secondValue = second !== undefined ? String(second) : '';
+
+          // Use parseInt, default to 0 if NaN
+          const firstNum = parseInt(firstValue) || 0;
+          const secondNum = parseInt(secondValue) || 0;
+
+          // Compare numbers or fall back to comparing strings if numbers are the same (and potentially zero)
+          let cmp =
+            firstNum !== secondNum
+              ? firstNum < secondNum
+                ? -1
+                : 1
+              : firstValue.localeCompare(secondValue);
+
+          // Adjust for sorting direction
+          if (sortDescriptor.direction === 'descending') {
+            cmp *= -1;
+          }
+
+          return cmp;
+        }),
+      };
+    },
+  });
 
   return (
     <div className="flex flex-col p-10 gap-10">
@@ -64,17 +101,29 @@ export default function EmployeePage() {
         <h1>Employees</h1>
         <p>Search</p>
       </div>
-      <Table aria-label="Example table with dynamic content">
+      <Table
+        aria-label="Employee table"
+        className="max-h-[85vh]"
+        sortDescriptor={list.sortDescriptor}
+        onSortChange={list.sort}
+      >
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+            <TableColumn key={column.key} allowsSorting>
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={allEmployees}>
-          {(employee) => (
-            <TableRow key={employee.id}>
+        <TableBody
+          isLoading={isLoading}
+          loadingContent={<Spinner label="Loading..." />}
+          emptyContent={'No rows to display.'}
+          items={list.items}
+        >
+          {(item: Employee) => (
+            <TableRow key={item.id}>
               {(columnKey) => (
-                <TableCell>{getKeyValue(employee, columnKey)}</TableCell>
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
               )}
             </TableRow>
           )}

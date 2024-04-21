@@ -43,5 +43,6 @@ Database:
 
 ## Improvements to be made
 
+- Auth
 - Caching
 - Pagination (only get x amount of employees at a time)
