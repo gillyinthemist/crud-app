@@ -110,19 +110,19 @@ export default function EmployeePage() {
   }, [list.filterText]);
 
   return (
-    <div className="flex flex-col p-10 gap-10">
+    <div className="flex flex-col p-10 gap-3">
       <h1 className="text-3xl">Employees</h1>
 
-      <Card className="flex flex-row justify-around p-5 h-52">
+      <Card className="flex flex-row justify-around h-36">
         {isLoading ? (
           <Spinner label="Loading..." />
         ) : (
           <>
-            <div className="flex flex-col items-center justify-center gap-3 p-5">
+            <div className="flex flex-col items-center justify-center gap-3">
               <p className="text-2xl">{list.items.length}</p>
               <p>Employees</p>
             </div>
-            <div className="flex flex-col items-center justify-center gap-3 p-5">
+            <div className="flex flex-col items-center justify-center gap-3">
               <p className="text-2xl">
                 £
                 {list.items.length > 0 &&
