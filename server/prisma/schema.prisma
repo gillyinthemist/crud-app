@@ -19,7 +19,7 @@ model Employee {
   lastName   String
   email      String   @unique
   position   String
-  salary     Float
+  salary     String
   department String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

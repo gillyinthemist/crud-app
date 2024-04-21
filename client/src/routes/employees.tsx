@@ -1,12 +1,8 @@
 import {
   Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
+  Card,
   getKeyValue,
   Input,
-  SortDescriptor,
   Spinner,
   Table,
   TableBody,
@@ -17,15 +13,12 @@ import {
 } from '@nextui-org/react';
 
 import { Employee } from '../utils/types';
-import { fetchEmployees } from '../services/api-service';
+import { deleteEmployee, fetchEmployees } from '../services/api-service';
 import { useAsyncList } from '@react-stately/data';
-import { useEffect, useState } from 'react';
-import {
-  PencilIcon,
-  PlusCircleIcon,
-  PlusIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
+import { Key, useEffect, useState } from 'react';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import AddEmployeeModal from '../components/add-employee-modal';
+import FilterButtons from '../components/filter-buttons';
 
 const columns = [
   {
@@ -60,7 +53,9 @@ const columns = [
 
 export default function EmployeePage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedKeys, setSelectedKeys] = useState();
+  const [selectedKeys, setSelectedKeys] = useState<Iterable<Key> | undefined>(
+    undefined
+  );
 
   const list = useAsyncList<Employee>({
     async load({ filterText }) {
@@ -104,59 +99,76 @@ export default function EmployeePage() {
     },
   });
 
+  async function handleDelete() {
+    await deleteEmployee(selectedKeys!.currentKey);
+    setSelectedKeys(undefined);
+    list.reload();
+  }
+
   useEffect(() => {
     list.reload();
   }, [list.filterText]);
 
   return (
     <div className="flex flex-col p-10 gap-10">
-      <div className="flex flex-row w-full justify-between">
-        <h1>Employees</h1>
-        {/* <Dropdown>
-          <DropdownTrigger>
-            <Button variant="bordered">Open Menu</Button>
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Dynamic Actions" items={items}>
-            {(item) => (
-              <DropdownItem
-                key={item.key}
-                color={item.key === 'delete' ? 'danger' : 'default'}
-                className={item.key === 'delete' ? 'text-danger' : ''}
-              >
-                {item.label}
-              </DropdownItem>
-            )}
-          </DropdownMenu>
-        </Dropdown> */}
+      <h1 className="text-3xl">Employees</h1>
+
+      <Card className="flex flex-row justify-around p-5 h-52">
+        {isLoading ? (
+          <Spinner label="Loading..." />
+        ) : (
+          <>
+            <div className="flex flex-col items-center justify-center gap-3 p-5">
+              <p className="text-2xl">{list.items.length}</p>
+              <p>Employees</p>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-3 p-5">
+              <p className="text-2xl">
+                £
+                {list.items.length > 0 &&
+                  (
+                    list.items.reduce(
+                      (acc, cur) => acc + parseFloat(cur.salary),
+                      0
+                    ) / list.items.length
+                  ).toFixed(2)}
+              </p>
+              <p>Average Salary</p>
+            </div>{' '}
+          </>
+        )}
+      </Card>
+      <div className="flex flex-row gap-3 w-full justify-between">
+        <FilterButtons />
+        <Input
+          className="w-96 flex-grow"
+          type="text"
+          label="Search"
+          value={list.filterText}
+          onValueChange={list.setFilterText}
+        />
         <div className="flex gap-3 items-center">
-          <Button>
-            New employee
-            <PlusIcon width={25} />
-          </Button>
+          <AddEmployeeModal reload={list.reload} />
           <Button isDisabled={!selectedKeys ? true : false}>
             Edit <PencilIcon width={20} />
           </Button>
-          <Button isDisabled={!selectedKeys ? true : false}>
+          <Button
+            isDisabled={!selectedKeys ? true : false}
+            onPress={handleDelete}
+          >
             Delete <TrashIcon width={20} />
           </Button>
-          <Input
-            className="w-96"
-            type="text"
-            label="Search"
-            value={list.filterText}
-            onValueChange={list.setFilterText}
-          />
         </div>
       </div>
       <Table
         aria-label="Employee table"
-        className="max-h-[85vh]"
+        className="max-h-[65vh]"
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
         isHeaderSticky
         selectionMode="single"
         selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
+        onSelectionChange={(keys) => setSelectedKeys(keys)}
       >
         <TableHeader columns={columns}>
           {(column) => (

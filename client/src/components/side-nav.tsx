@@ -6,12 +6,12 @@ const menu = [
   {
     title: 'Dashboard',
     link: '/dashboard',
-    icon: <HomeIcon width={25} />,
+    icon: <HomeIcon width={20} />,
   },
   {
     title: 'Employees',
     link: '/dashboard/employees',
-    icon: <UserIcon width={25} />,
+    icon: <UserIcon width={20} />,
   },
 ];
 

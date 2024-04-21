@@ -47,3 +47,11 @@ Database:
 - Caching
 - Pagination (only get x amount of employees at a time)
 - Debouncing
+- Error handling (E.g form submission)
+- Populate Position and department filters
+- Select columns to enable
+- Salary as int/float instead of string
+- Pivot data (e.g salary based on department)
+- Confirm actions (delete)
+- Global state management
+- Remove extras search by relevance

@@ -4,7 +4,7 @@ export interface Employee {
   lastName: string;
   email: string;
   position: string;
-  salary: number;
+  salary: string;
   department: string;
   createdAt?: string | Date;
   updatedAt?: string | Date;
