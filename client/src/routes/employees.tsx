@@ -15,7 +15,8 @@ import {
 import { Employee } from '../utils/types';
 import { deleteEmployee, fetchEmployees } from '../services/api-service';
 import { useAsyncList } from '@react-stately/data';
-import { Key, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Key } from '@react-types/shared';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import AddEmployeeModal from '../components/add-employee-modal';
 import FilterButtons from '../components/filter-buttons';
@@ -53,9 +54,9 @@ const columns = [
 
 export default function EmployeePage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedKeys, setSelectedKeys] = useState<Iterable<Key> | undefined>(
-    undefined
-  );
+  const [selectedKeys, setSelectedKeys] = useState<
+    Iterable<Key> | 'all' | undefined
+  >(undefined);
 
   const list = useAsyncList<Employee>({
     async load({ filterText }) {
@@ -100,9 +101,17 @@ export default function EmployeePage() {
   });
 
   async function handleDelete() {
-    await deleteEmployee(selectedKeys!.currentKey);
-    setSelectedKeys(undefined);
-    list.reload();
+    if (selectedKeys !== 'all' && selectedKeys) {
+      // Assuming only one key is present, extract it
+      const keyIterator = selectedKeys[Symbol.iterator]();
+      const firstResult = keyIterator.next();
+      if (!firstResult.done) {
+        const currentKey = firstResult.value;
+        await deleteEmployee(currentKey as string);
+        setSelectedKeys(undefined);
+        list.reload();
+      }
+    }
   }
 
   useEffect(() => {

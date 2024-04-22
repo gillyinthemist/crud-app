@@ -4,7 +4,7 @@ import {
   PowerIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
-import { MicrophoneIcon, MoonIcon, SunIcon } from '@heroicons/react/24/solid';
+import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import { Divider, Switch } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 
