@@ -2,6 +2,11 @@
 
 A simple CRUD application for a coding techincal round for a Full-Stack role. As the choice of data to represent the features of the application was to be my own, I decided to build a simple Employee Management system
 
+Deployed live:
+https://crud-app-nine.vercel.app/ - (Frontend)
+
+https://crudscsk.fly.dev/ - (CRUD API)
+
 ## Plan
 
 Before beginning any development, I need to think about the structure of my data, and the tech stack I'll use.
