@@ -1,12 +1,8 @@
-import {
-  HomeIcon,
-  IdentificationIcon,
-  PowerIcon,
-  UserIcon,
-} from '@heroicons/react/24/outline';
+import { HomeIcon, PowerIcon, UserIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import { Divider, Switch } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
+import CrudLogo from './logo';
 
 const menu = [
   {
@@ -27,10 +23,7 @@ export default function SideNav() {
     <div className="w-60 bg-blue-950 p-10 text-white flex flex-col gap-5 rounded-xl m-3">
       {/* Logo */}
       <div className="flex flex-col gap-5">
-        <div className="text-3xl font-extrabold flex gap-2 items-center">
-          <IdentificationIcon width={40} />
-          EMS
-        </div>
+        <CrudLogo />
       </div>
 
       {/* Menu */}

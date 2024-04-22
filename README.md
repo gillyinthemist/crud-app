@@ -37,6 +37,10 @@ Database:
 - ORM: Prisma - Prisma will allow straightforward connections to the DB, and allow me to map out the relational schema as a Prisma Model. Any changes can then easily be made by updating the model.
 - Deployment: Hosted on AWS RDS
 
+### Brand:
+
+I used Namelix.com to come up with 'Emplo' and drew up a quick logo
+
 ### Wireframing:
 
 [Figma](https://www.figma.com/file/9jeUvaeGUEwgH5fZy0Qq3V/SCSK-CRUD-Application?type=design&node-id=0%3A1&mode=design&t=1AFQrYLqTFpD19UP-1)
@@ -55,3 +59,6 @@ Database:
 - Confirm actions (delete)
 - Global state management
 - Remove extras search by relevance
+- Styling (would be easier with a defined + approved design)
+- Edit functionality on front end
+- Filter buttons functionality

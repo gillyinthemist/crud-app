@@ -7,7 +7,7 @@ export default function RootLayout() {
   return (
     <div className="flex flex-col h-screen justify-between overflow-hidden">
       {/* <header className="bg-slate-700">Header</header> */}
-      <main className="flex flex-col flex-1">
+      <main className="flex flex-col flex-1 font-montserrat">
         <Outlet />
       </main>
     </div>
