@@ -171,7 +171,7 @@ export default function EmployeePage() {
       </div>
       <Table
         aria-label="Employee table"
-        className="max-h-[65vh]"
+        className="max-h-[60vh]"
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
         isHeaderSticky
