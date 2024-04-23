@@ -52,10 +52,12 @@ I used Namelix.com to come up with 'Emplo' and drew up a quick logo
 
 ## Improvements to be made
 
+- Tabular data editing (Spreadsheet-like)
 - Auth
 - Caching
 - Pagination (only get x amount of employees at a time)
 - Debouncing
+- Optimistic rendering (allows instant updates on front-end without waiting for response)
 - Error handling (E.g form submission)
 - Populate Position and department filters
 - Select columns to enable
@@ -66,4 +68,3 @@ I used Namelix.com to come up with 'Emplo' and drew up a quick logo
 - Remove extras search by relevance
 - Styling (would be easier with a defined + approved design)
 - Filter buttons functionality
-- Tabular data editing (Spreadsheet-like)
