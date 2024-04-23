@@ -65,5 +65,5 @@ I used Namelix.com to come up with 'Emplo' and drew up a quick logo
 - Global state management
 - Remove extras search by relevance
 - Styling (would be easier with a defined + approved design)
-- Edit functionality on front end
 - Filter buttons functionality
+- Tabular data editing (Spreadsheet-like)

@@ -17,9 +17,10 @@ import { deleteEmployee, fetchEmployees } from '../services/api-service';
 import { useAsyncList } from '@react-stately/data';
 import { useEffect, useState } from 'react';
 import { Key } from '@react-types/shared';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import AddEmployeeModal from '../components/add-employee-modal';
 import FilterButtons from '../components/filter-buttons';
+import EditEmployeeModal from '../components/edit-employee-modal';
 
 const columns = [
   {
@@ -52,6 +53,15 @@ const columns = [
   },
 ];
 
+const emptyEmployee: Employee = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  position: '',
+  salary: '',
+  department: '',
+};
+
 export default function EmployeePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedKeys, setSelectedKeys] = useState<
@@ -67,6 +77,7 @@ export default function EmployeePage() {
         items: res,
       };
     },
+    initialSortDescriptor: { column: 'id', direction: 'ascending' },
     async sort({ items, sortDescriptor }) {
       return {
         items: (items as Employee[]).sort((a, b) => {
@@ -105,13 +116,29 @@ export default function EmployeePage() {
       // Assuming only one key is present, extract it
       const keyIterator = selectedKeys[Symbol.iterator]();
       const firstResult = keyIterator.next();
+
       if (!firstResult.done) {
         const currentKey = firstResult.value;
+        console.log(list.getItem(currentKey));
         await deleteEmployee(currentKey as string);
         setSelectedKeys(undefined);
         list.reload();
       }
     }
+  }
+
+  function getEmployee() {
+    if (selectedKeys !== 'all' && selectedKeys) {
+      // Assuming only one key is present, extract it
+      const keyIterator = selectedKeys[Symbol.iterator]();
+      const firstResult = keyIterator.next();
+
+      if (!firstResult.done) {
+        const currentKey = firstResult.value;
+        return list.getItem(parseInt(currentKey as string));
+      }
+    }
+    return emptyEmployee;
   }
 
   useEffect(() => {
@@ -143,7 +170,8 @@ export default function EmployeePage() {
                   ).toFixed(2)}
               </p>
               <p>Average Salary</p>
-            </div>{' '}
+              <p></p>
+            </div>
           </>
         )}
       </Card>
@@ -158,9 +186,11 @@ export default function EmployeePage() {
         />
         <div className="flex gap-3 items-center">
           <AddEmployeeModal reload={list.reload} />
-          <Button isDisabled={!selectedKeys ? true : false}>
-            Edit <PencilIcon width={20} />
-          </Button>
+          <EditEmployeeModal
+            reload={list.reload}
+            selectedKeys={selectedKeys}
+            employee={getEmployee()}
+          />
           <Button
             isDisabled={!selectedKeys ? true : false}
             onPress={handleDelete}

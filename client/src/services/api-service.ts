@@ -34,6 +34,19 @@ export async function addEmployee(employee: Employee) {
   return await response.json();
 }
 
+export async function updateEmployee(employee: Employee) {
+  const response = await fetch(`${BASE_URL}/employees/${employee.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      mode: 'cors',
+    },
+    body: JSON.stringify(employee),
+  });
+  if (!response.ok) throw new Error('Failed to update employee');
+  return await response.json();
+}
+
 export async function deleteEmployee(employeeId: string) {
   const response = await fetch(`${BASE_URL}/employees/${employeeId}`, {
     method: 'DELETE',
